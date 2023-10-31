@@ -1,12 +1,18 @@
 package com.example.materialui
 
-import android.database.sqlite.SQLiteConstraintException
-import androidx.appcompat.app.AppCompatActivity
+import DatabaseBuilder
+import android.R
 import android.os.Bundle
+import android.view.View
+import android.widget.ProgressBar
 import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
 import com.example.materialui.databinding.ActivityMainBinding
 import com.example.materialui.room.AppDatabase
 import com.example.materialui.room.BMI
+import com.github.ybq.android.spinkit.sprite.Sprite
+import com.github.ybq.android.spinkit.style.DoubleBounce
+
 
 class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
@@ -21,17 +27,18 @@ class MainActivity : AppCompatActivity() {
 
 
         database = DatabaseBuilder.getInstance(this)
+
         binding.calculateBTN.setOnClickListener {
-            val weightStr = binding.weightEt.editText?.text?.toString()
+
+                val weightStr = binding.weightEt.editText?.text?.toString()
             val heightStr = binding.heightEt.editText?.text?.toString()
             val name = "Hamza";
-
-
             if (weightStr.isNullOrBlank() || heightStr.isNullOrBlank()) {
                 Toast.makeText(applicationContext, "Input is empty", Toast.LENGTH_SHORT).show()
             } else {
+                try{
 
-                try {
+
                     val weight = weightStr.toDouble()
                     val height = heightStr.toDouble()
 
@@ -39,7 +46,9 @@ class MainActivity : AppCompatActivity() {
 
                     val bmiMessage = "BMI: $bmi"
 
-                    when {
+               binding.spinKit.visibility=View.VISIBLE;
+                when {
+
                         bmi < 18.5 -> {
                             Toast.makeText(
                                 applicationContext,
@@ -48,6 +57,7 @@ class MainActivity : AppCompatActivity() {
                             ).show()
                             val obj3 = BMI(name = name, height = height, weight = weight)
                             database.userDao().insertLogin(obj3)
+
                         }
 
                         bmi.toDouble() in 18.5..24.9 -> {
@@ -58,6 +68,7 @@ class MainActivity : AppCompatActivity() {
                             ).show()
                             val obj3 = BMI(name = name, height = height, weight = weight)
                             database.userDao().insertLogin(obj3)
+
                         }
 
                         bmi.toDouble() in 25.0..29.9 -> {
@@ -68,6 +79,7 @@ class MainActivity : AppCompatActivity() {
                             ).show()
                             val obj3 = BMI(name = name, height = height, weight = weight)
                             database.userDao().insertLogin(obj3)
+
                         }
 
                         bmi >= 30 -> {
@@ -78,10 +90,12 @@ class MainActivity : AppCompatActivity() {
                             ).show()
                             val obj3 = BMI(name = name, height = height, weight = weight)
                             database.userDao().insertLogin(obj3)
+
                         }
 
                     }
-                } catch (e: NumberFormatException) {
+                }
+                            catch (e: NumberFormatException) {
                     Toast.makeText(applicationContext, "Invalid Input", Toast.LENGTH_SHORT).show()
                 }
 
