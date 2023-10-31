@@ -37,6 +37,7 @@ class MainActivity : AppCompatActivity() {
                 Toast.makeText(applicationContext, "Input is empty", Toast.LENGTH_SHORT).show()
             } else {
                 try{
+                    binding.spinKit.visibility=View.VISIBLE;
 
 
                     val weight = weightStr.toDouble()
@@ -46,8 +47,7 @@ class MainActivity : AppCompatActivity() {
 
                     val bmiMessage = "BMI: $bmi"
 
-               binding.spinKit.visibility=View.VISIBLE;
-                when {
+                    when {
 
                         bmi < 18.5 -> {
                             Toast.makeText(
@@ -94,11 +94,14 @@ class MainActivity : AppCompatActivity() {
                         }
 
                     }
-                }
-                            catch (e: NumberFormatException) {
+                } catch (e: NumberFormatException) {
                     Toast.makeText(applicationContext, "Invalid Input", Toast.LENGTH_SHORT).show()
+                }   catch (e: android.database.sqlite.SQLiteConstraintException) {
+                    // Handle unique constraint violation (duplicate name)
+                    Toast.makeText(applicationContext, "Name already exists", Toast.LENGTH_SHORT).show()
+                } finally {
+                    binding.spinKit.visibility = View.INVISIBLE
                 }
-
             }
         }
 
